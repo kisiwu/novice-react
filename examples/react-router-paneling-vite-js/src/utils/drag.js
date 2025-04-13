@@ -1,6 +1,12 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 
-export function setupMouseDragEvents(md: React.MouseEvent<HTMLDivElement, MouseEvent>, elem: RefObject<HTMLDivElement | null>) {
+/**
+ * 
+ * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} md 
+ * @param {React.RefObject<HTMLDivElement | null>} elem 
+ * @returns 
+ */
+export function setupMouseDragEvents(md, elem) {
     /**
      * The element to drag
      */
@@ -17,7 +23,12 @@ export function setupMouseDragEvents(md: React.MouseEvent<HTMLDivElement, MouseE
 
     md.preventDefault();
 
-    function onMouseMove(e: MouseEvent) {
+    /**
+     * 
+     * @param {MouseEvent} e 
+     * @returns 
+     */
+    function onMouseMove(e) {
         if (!target) return;
 
         let y = offsetTop - (startY - e.clientY)
@@ -38,7 +49,13 @@ export function setupMouseDragEvents(md: React.MouseEvent<HTMLDivElement, MouseE
     window.addEventListener('mouseup', onMouseUp);
 }
 
-export function setupTouchDragEvents(md: React.TouchEvent<HTMLDivElement>, elem: RefObject<HTMLDivElement | null>) {
+/**
+ * 
+ * @param {React.TouchEvent<HTMLDivElement>} md 
+ * @param {React.RefObject<HTMLDivElement | null>} elem 
+ * @returns 
+ */
+export function setupTouchDragEvents(md, elem) {
     /**
      * The element to drag
      */
@@ -53,7 +70,12 @@ export function setupTouchDragEvents(md: React.TouchEvent<HTMLDivElement>, elem:
         offsetLeft
     } = target
 
-    function onTouchMove(e: TouchEvent) {
+    /**
+     * 
+     * @param {TouchEvent} e 
+     * @returns 
+     */
+    function onTouchMove(e) {
         if (!target) return;
 
         let y = offsetTop - (startY - e.touches[0].clientY)
