@@ -1,0 +1,17 @@
+.DS_STORE
+.idea
+
+# IntelliJ IDEA module file
+*.iml
+.vscode/*
+!.vscode/launch.json
+!.vscode/extensions.json
+*.log
+*.tsbuildinfo
+/.eslintcache
+/.nyc_output
+/coverage
+
+build
+dist
+node_modules

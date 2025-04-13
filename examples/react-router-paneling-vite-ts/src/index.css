@@ -1,0 +1,213 @@
+@import 'tailwindcss';
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  line-height: 1.5;
+  color: #121212;
+}
+
+#index-page,
+#error-page,
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.panel-container {
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.panel {
+  transition-duration: 500ms, 0s;
+  transition-property: opacity;
+  transition-delay: 0s, 200ms;
+  min-width: 275px;
+
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  .panel-menu-bar {
+    display: flex;
+    flex-direction: row;
+
+    .item-group {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: row;
+      column-gap: 5px;
+
+      &.left-group {
+        justify-content: flex-start;
+        padding-left: 0.25rem;
+        .item {
+          cursor: pointer;
+        }
+      }
+
+      &.middle-group {
+        justify-content: center;
+      }
+
+      &.right-group {
+        justify-content: flex-end;
+        padding-right: 0.25rem;
+        .item {
+          cursor: pointer;
+        }
+      }
+
+      .close {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .panel-content {
+    display: flex;
+    flex-grow: 1;
+    overflow: auto;
+  }
+
+  &:not(.minimized) {
+    .panel-content {
+      transition-duration: 500ms, 0s;
+      transition-property: all;
+      transition-delay: 0s, 200ms;
+    }
+  }
+
+  &.minimized {
+    /* min-width to keep menu bar in sight */
+    min-width: 1.8rem;
+    /* width 0 is a hack to always minimize */
+    width: 0px !important;
+    flex-grow: 0 !important;
+    flex-direction: row;
+
+    .panel-content {
+      visibility: hidden;
+      width: 0;
+      opacity: 0;
+
+      /** 
+         * necessary to display none the direct child: 
+         *      1. to remove any invisible width and cause a horizontal scroll
+         *      2. because display none on panel-content would cancel animations on it
+         */
+      > div {
+        display: none;
+      }
+    }
+
+    .panel-menu-bar {
+      flex-direction: column-reverse;
+
+      .item-group {
+        flex-direction: column-reverse;
+
+        &.left-group {
+          padding-left: 0;
+        }
+
+        &.right-group {
+          padding-right: 0;
+        }
+
+        .item {
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+        }
+      }
+    }
+  }
+}
+
+/*
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+*/
