@@ -107,3 +107,10 @@ The documentation being ongoing, you can find some examples:
 - https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-vite-js
 - https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-vite-ts
 
+
+### FRAMEWORK MODE
+
+To use React Router Paneling in [Framework Mode](https://reactrouter.com/start/framework/installation), you have to make use of `clientLoader` of your route and `createClientLoader` of `@novice1-react/react-router-paneling`.
+
+The documentation being ongoing, you can find some examples:
+- https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-framework

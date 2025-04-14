@@ -28,8 +28,8 @@ export function createRouteObject<C extends object = object, P extends object = 
     /**
      * Necessary if not a child route
      */
-    errorElement?: ReactNode | null    
-    
+    errorElement?: ReactNode | null
+
     errorComponent?: FunctionComponent<P & IPanelProps<C>>
     indexComponent?: FunctionComponent
     max?: number
@@ -181,10 +181,10 @@ function createLoader<C extends object = object, T extends IPanelProps<C> = IPan
         }
 
         return {
-            get splat(){
+            get splat() {
                 return splatArray.map(s => s)
             },
-            get stack(){
+            get stack() {
                 return stack.map(s => s)
             }
         }
@@ -195,5 +195,94 @@ function createAction() {
     return async function action({ params }: ActionFunctionArgs) {
         console.debug('action:', params)
         return redirect('/')
+    }
+}
+
+export type ClientLoaderArgs = {
+    params: {
+        '*': string;
+    } & {
+        [key: string]: string | undefined;
+    }
+}
+
+/**
+ * Framework Mode
+ */
+export function createClientLoader<C extends object = object, P extends object = object>({
+    path,
+    max,
+    panels,
+    errorComponent = DefaultErrorPanel,
+    indexComponent = DefaultIndexComponent
+}: {
+    path?: string
+    max?: number
+    panels: Record<string, FunctionComponent<P & IPanelProps<C>>>
+    errorComponent?: FunctionComponent<P & IPanelProps<C>>
+    indexComponent?: FunctionComponent
+}) {
+    return async function loader<T extends ClientLoaderArgs = ClientLoaderArgs>({ params }: T): Promise<Response | ILoaderData<C, P & IPanelProps<C>>> {
+        const { '*': splat } = params;
+        const stack: StackType<C, P & IPanelProps<C>> = []
+        const redirectPath: string[] = []
+        const splatArray: string[] = splat?.split('/') || [];
+        if (splatArray.some(panelPath => {
+            let stop = false
+            if (max && panelPath && redirectPath.length >= max) {
+                // panels must not exceed max number
+                stop = true
+            } else if (panelPath) {
+                const previousPath = redirectPath.join('/')
+                redirectPath.push(panelPath)
+                const currentPath = redirectPath.join('/')
+
+                const parsed = parsePanelPath(panelPath)
+
+                if (parsed && panels[parsed.name]) {
+                    stack.push({
+                        component: panels[parsed.name],
+                        id: parsed.id,
+                        extras: parsed.extras,
+                        previousPath,
+                        currentPath,
+                        panelPath: panelPath
+                    })
+                } else {
+                    // last panel not found
+                    stack.push({
+                        component: errorComponent,
+                        previousPath,
+                        extras: {},
+                        currentPath,
+                        panelPath: panelPath,
+                        error: true
+                    })
+                    stop = true
+                }
+            } else {
+                // extra slash must be removed
+                stop = true
+            }
+            return stop
+        })) {
+
+            if (!redirectPath.length) {
+                // go back to base url
+                stack.push({ component: indexComponent, previousPath: '/', isIndex: true })
+            } else if (splatArray.length > redirectPath.length) {
+                // not ok
+                return redirect(resolveRedirectPath(path) + redirectPath.join('/'))
+            }
+        }
+
+        return {
+            get splat() {
+                return splatArray.map(s => s)
+            },
+            get stack() {
+                return stack.map(s => s)
+            }
+        }
     }
 }

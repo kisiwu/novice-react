@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  @apply bg-white dark:bg-gray-950;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  line-height: 1.5;
+  color: #121212;
+}
+
+#index-page,
+#error-page,
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.panel-container {
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.panel {
+  transition-duration: 500ms, 0s;
+  transition-property: opacity;
+  transition-delay: 0s, 200ms;
+  min-width: 275px;
+
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  .panel-menu-bar {
+    display: flex;
+    flex-direction: row;
+
+    .item-group {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: row;
+      column-gap: 5px;
+
+      &.left-group {
+        justify-content: flex-start;
+        padding-left: 0.25rem;
+        .item {
+          cursor: pointer;
+        }
+      }
+
+      &.middle-group {
+        justify-content: center;
+      }
+
+      &.right-group {
+        justify-content: flex-end;
+        padding-right: 0.25rem;
+        .item {
+          cursor: pointer;
+        }
+      }
+
+      .close {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .panel-content {
+    display: flex;
+    flex-grow: 1;
+    overflow: auto;
+  }
+
+  &:not(.minimized) {
+    .panel-content {
+      transition-duration: 500ms, 0s;
+      transition-property: all;
+      transition-delay: 0s, 200ms;
+    }
+  }
+
+  &.minimized {
+    /* min-width to keep menu bar in sight */
+    min-width: 1.8rem;
+    /* width 0 is a hack to always minimize */
+    width: 0px !important;
+    flex-grow: 0 !important;
+    flex-direction: row;
+
+    .panel-content {
+      visibility: hidden;
+      width: 0;
+      opacity: 0;
+
+      /** 
+         * necessary to display none the direct child: 
+         *      1. to remove any invisible width and cause a horizontal scroll
+         *      2. because display none on panel-content would cancel animations on it
+         */
+      > div {
+        display: none;
+      }
+    }
+
+    .panel-menu-bar {
+      flex-direction: column-reverse;
+
+      .item-group {
+        flex-direction: column-reverse;
+
+        &.left-group {
+          padding-left: 0;
+        }
+
+        &.right-group {
+          padding-right: 0;
+        }
+
+        .item {
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+        }
+      }
+    }
+  }
+}
