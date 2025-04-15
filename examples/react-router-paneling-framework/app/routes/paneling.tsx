@@ -1,6 +1,12 @@
 import type { Route } from "./+types/paneling";
 import { useLoaderData } from "react-router";
-import { createClientLoader, createCustomPanel, usePaneling, type FunctionExtension, type LoaderData } from "@novice1-react/react-router-paneling";
+import { 
+    createClientLoader, 
+    createCustomPanel, 
+    usePaneling, 
+    type FunctionExtension, 
+    type LoaderData
+} from "@novice1-react/react-router-paneling";
 import ErrorContent from "~/components/contents/ErrorContent";
 import IndexPage from "~/pages/IndexPage";
 import InfoContent from "~/components/contents/InfoContent";
@@ -108,7 +114,8 @@ export default function Paneling() {
         )
     }
 
-    const { paneling } = usePaneling({ extension })
+    // const { paneling } = usePaneling({ extension }) // non-strict types
+    const { paneling } = usePaneling<ContentPropsExtension, PanelPropsExtension>({ extension }) // strict types
 
     return <PanelManagerContext.Provider value={{ nbPanels: stack.length, setActivePanel, panelingType: type }}>
         <div id={type} className='flex flex-1 h-full items-stretch'>
