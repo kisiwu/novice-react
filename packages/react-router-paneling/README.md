@@ -4,11 +4,11 @@ React Router Paneling is a library to use with React Router to create routes whe
 
 ## Usage
 
+You can use `@novice1-react/react-router-paneling` in [Data Mode](#data-mode) or in [Framework Mode](#framework-mode).
+
 ### DATA MODE
 
-To use React Router Paneling, you should use React Router in [Data Mode](https://reactrouter.com/start/data/installation) and install `@novice1-react/react-router-paneling`.
-
-For a basic usage example without much customization, you can place the code below in `main.jsx` or `main.tsx` file:
+For a basic usage example in [Data Mode](https://reactrouter.com/start/data/installation) without much customization, you can place the code below in `main.jsx` or `main.tsx` file:
 
 ```tsx
 import { StrictMode } from 'react';
