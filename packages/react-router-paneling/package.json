@@ -1,6 +1,6 @@
 {
   "name": "@novice1-react/react-router-paneling",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React Router Paneling is a library to use with React Router to create routes where each segment of the path is a panel.",
   "type": "module",
   "main": "lib/index.cjs.js",
@@ -13,6 +13,20 @@
   "files": [
     "lib"
   ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.es.js"
+    },
+    "./cjs": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.cjs.js"
+    },
+    "./es": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.es.js"
+    }
+  },
   "author": "demingongo",
   "homepage": "",
   "repository": {

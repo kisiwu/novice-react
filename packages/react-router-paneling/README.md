@@ -149,6 +149,13 @@ import ErrorContent from "~/components/contents/ErrorContent";
 import InfoContent from "~/components/contents/InfoContent";
 import ExtraContent from "~/components/contents/ExtraContent";
 
+export function meta({ }: Route.MetaArgs) {
+    return [
+        { title: "Paneling" },
+        { name: "description", content: "Welcome to React Router Paneling!" }
+    ];
+}
+
 export async function clientLoader(args: Route.ClientLoaderArgs) {
     const clientData = await createClientLoader({
         // required to repeat the route here with or without '*'
@@ -282,6 +289,40 @@ export default function InfoContent ({
         <Link to={currentPath + '/extra:4448-927777-633-3444666'}>
           open extra panel 4448-927777-633-3444666
         </Link>
+      </div>
+    </div>
+  );
+}
+```
+
+```tsx
+// components/contents/ErrorContent.tsx
+
+import type { ContentProps } from '../../types'
+
+export default function ErrorContent ({
+    panelIndex
+}: ContentProps) {
+  return (
+    <div>
+      <h1>Error panel</h1>
+      <p>My index is "{panelIndex}"</p>
+    </div>
+  );
+}
+```
+
+```tsx
+// components/IndexPage.tsx
+
+import { Link } from 'react-router'
+
+export default function IndexPage () {
+  return (
+    <div>
+      <h1>Index page</h1>
+      <div>
+        <Link to='info'>open info panel</Link>
       </div>
     </div>
   );
