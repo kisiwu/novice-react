@@ -17,7 +17,7 @@
   ],
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.8.0",
   "devDependencies": {
     "lerna": "^8.2.2"
