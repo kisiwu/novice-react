@@ -1,0 +1,2 @@
+- createPaneling.ts
+    -  parsePanelPath(panelPath: string) to extract panel segments must receive divider charactern for extras as argument, defaulting to ':'
