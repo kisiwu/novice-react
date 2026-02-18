@@ -1,4 +1,4 @@
-import { MouseEventHandler, RefObject, TouchEventHandler, useCallback, useEffect, useState, useRef } from 'react'
+import { MouseEventHandler, RefObject, TouchEventHandler, useCallback, useState, useRef, useMemo } from 'react'
 import clsx from 'clsx'
 import { setupMouseDragEvents, setupTouchDragEvents } from '@/utils/drag'
 import { IPanelProps } from '@novice1-react/react-router-paneling';
@@ -22,42 +22,38 @@ export default function CustomPanel ({
     panelingType
 }: IPanelProps<ContentPropsExtension> & PanelPropsExtension) {
 
+    // Declare state
+    const [title, setTitle] = useState('')
+    const [minimized, setMinimized] = useState(false)
+
+    // Create the callbacks
     const onTitleChange = useCallback((value: string) => {
-        setPanelState(state => {
-            const newState = { ...state, title: value };
-            return newState
-        })
+        setTitle(value)
     }, [])
 
-    const setMinimized = useCallback((value: boolean) => {
-        setPanelState(state => {
-            const newState = { ...state, minimized: value };
-            return newState
-        })
+    const setMinimizedCallback = useCallback((value: boolean) => {
+        setMinimized(value)
     }, [])
 
     const toggleMinimized = useCallback(() => {
-        setPanelState(state => {
-            const { minimized: minimizedValue } = { ...state }
-            const newState = { ...state, minimized: !minimizedValue };
-            return newState
-        })
+        setMinimized(prev => !prev)
     }, [])
 
-    const [panelState, setPanelState] = useState<ICustomPanelContext>({
+    // Build the context value dynamically - no state needed
+    const contextValue = useMemo<ICustomPanelContext>(() => ({
         currentPath,
         extras,
         id,
         panelPath,
         previousPath,
         splat,
-        title: '',
+        title,
         setTitle: onTitleChange,
-        minimized: false,
-        setMinimized,
+        minimized,
+        setMinimized: setMinimizedCallback,
         toggleMinimized,
         panelIndex
-    })
+    }), [currentPath, extras, id, panelPath, previousPath, splat, title, minimized, panelIndex, onTitleChange, setMinimizedCallback, toggleMinimized])
 
     const panelRef = useRef<HTMLDivElement>(null)
 
@@ -72,13 +68,6 @@ export default function CustomPanel ({
             setActivePanel(panelIndex)
         }
     }, [panelIndex, activePanel, setActivePanel])
-    
-
-    useEffect(() => {
-        setPanelState(value => {
-            return { ...value, currentPath, extras, id, previousPath, splat, panelIndex }
-        })
-    }, [currentPath, extras, id, previousPath, splat, panelPath, panelIndex])
 
     //#region panel render
 
@@ -151,10 +140,10 @@ export default function CustomPanel ({
     }
 
     return (
-        <CustomPanelContext.Provider value={panelState}>
+        <CustomPanelContext.Provider value={contextValue}>
             <div className={
                 clsx(
-                    `panel${panelState.minimized ? ' minimized' : ''}`,
+                    `panel${minimized ? ' minimized' : ''}`,
                     'rounded-md border-2 border-gray-200 bg-gray-200 dark:border-gray-700 dark:bg-gray-700',
                     panelingClass,
                     zIndex
@@ -166,8 +155,8 @@ export default function CustomPanel ({
                 <PanelMenuBar
                     onClose={onClose}
                     toggleSize={toggleMinimized}
-                    minimized={panelState.minimized}
-                    title={panelState.title}
+                    minimized={minimized}
+                    title={title}
                     draggablePanel={panelingType === 'stacking' ? panelRef : undefined}
                 />
                 <div className='panel-content bg-gray-50 dark:bg-gray-800 dark:text-gray-300'>

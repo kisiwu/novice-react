@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import {
+    useCallback,
+    useMemo
+} from 'react'
 import { IPanelContext, PanelContext } from './panel-context'
 import { useNavigate } from 'react-router'
 import { IPanelProps } from '../definitions'
@@ -9,23 +12,17 @@ function Panel({ currentPath, extras, id, previousPath, splat, content, children
 
     const navigate = useNavigate()
 
-    const [panelState, setPanelState] = useState<PanelState>({
+    const panelState = useMemo<PanelState>(() => ({
         currentPath,
         extras,
         id,
         previousPath,
         splat,
-    })
+    }), [currentPath, extras, id, previousPath, splat])
 
     const onClose = useCallback(() => {
         navigate(previousPath)
     }, [navigate, previousPath])
-
-    useEffect(() => {
-        setPanelState(value => {
-            return { ...value, currentPath, extras, id, previousPath, splat }
-        })
-    }, [currentPath, extras, id, previousPath, splat])
 
     return (
         <>

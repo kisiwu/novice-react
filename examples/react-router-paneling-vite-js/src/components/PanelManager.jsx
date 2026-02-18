@@ -27,6 +27,7 @@ export function PanelManager({ type = 'stacking' }) {
     }
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActivePanelIndex(stack.length ? stack.length - 1 : 0)
     }, [stack.length])
 

@@ -26,7 +26,7 @@ export function PanelManager({ type = 'stacking' }: { type?: PanelingType }) {
     const { stack } = useLoaderData<LoaderData<ContentPropsExtension, PanelPropsExtension>>();
 
     const [activePanelIndex, setActivePanelIndex] = useState(0)
-
+    
     const setActivePanel = useCallback((idx: number) => {
         if (typeof idx === 'number' && idx >= 0 && idx < stack.length && idx != activePanelIndex) {
             setActivePanelIndex(Math.round(idx))
@@ -44,6 +44,7 @@ export function PanelManager({ type = 'stacking' }: { type?: PanelingType }) {
     }
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActivePanelIndex(stack.length ? stack.length - 1 : 0)
     }, [stack.length])
 

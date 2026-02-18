@@ -1,0 +1,3 @@
+- update eslint files
+- get rid of lerna => only use pnpm
+- check packages .todo files
