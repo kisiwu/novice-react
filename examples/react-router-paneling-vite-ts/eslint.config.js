@@ -1,14 +1,26 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import stylisticJs from '@stylistic/eslint-plugin'
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import stylisticJs from '@stylistic/eslint-plugin';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import { defineConfig } from 'eslint/config';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import globals from 'globals';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export default tseslint.config(
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+    baseDirectory: __dirname,
+    recommendedConfig: js.configs.recommended,
+    allConfig: js.configs.all,
+});
+
+export default defineConfig([
   { ignores: ['dist'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    extends: compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended'),
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -17,6 +29,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      '@typescript-eslint': typescriptEslint,
       '@stylistic/js': stylisticJs
     },
     rules: {
@@ -28,5 +41,5 @@ export default tseslint.config(
       '@stylistic/js/quotes': ['warn', 'single'],
       '@stylistic/js/quote-props': ['error', 'as-needed']
     },
-  },
-)
+  }
+])

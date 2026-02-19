@@ -1,26 +1,26 @@
-import type { Route } from "./+types/paneling";
-import { useLoaderData } from "react-router";
+import type { Route } from './+types/paneling';
+import { useLoaderData } from 'react-router';
 import { 
     createClientLoader, 
     createCustomPanel, 
     usePaneling, 
     type FunctionExtension, 
     type LoaderData
-} from "@novice1-react/react-router-paneling";
-import ErrorContent from "~/components/contents/ErrorContent";
-import IndexPage from "~/pages/IndexPage";
-import InfoContent from "~/components/contents/InfoContent";
-import ExtraContent from "~/components/contents/ExtraContent";
-import CustomPanel from "~/components/panels/CustomPanel";
-import type { ContentPropsExtension, PanelingType, PanelPropsExtension } from "~/definitions";
-import { useCallback, useEffect, useState } from "react";
-import { PanelManagerContext } from "~/hooks/usePanelManager";
-import clsx from "clsx";
+} from '@novice1-react/react-router-paneling';
+import ErrorContent from '~/components/contents/ErrorContent';
+import IndexPage from '~/pages/IndexPage';
+import InfoContent from '~/components/contents/InfoContent';
+import ExtraContent from '~/components/contents/ExtraContent';
+import CustomPanel from '~/components/panels/CustomPanel';
+import type { ContentPropsExtension, PanelingType, PanelPropsExtension } from '~/definitions';
+import { useCallback, useEffect, useState } from 'react';
+import { PanelManagerContext } from '~/hooks/usePanelManager';
+import clsx from 'clsx';
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Paneling" },
-        { name: "description", content: "Welcome to React Router Paneling!" },
+        { title: 'Paneling' },
+        { name: 'description', content: 'Welcome to React Router Paneling!' },
     ];
 }
 

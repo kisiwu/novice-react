@@ -1,12 +1,25 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import stylisticJs from '@stylistic/eslint-plugin'
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import stylisticJs from '@stylistic/eslint-plugin';
+import { defineConfig } from 'eslint/config';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import globals from 'globals';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export default [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
+});
+
+export default defineConfig([
   { ignores: ['dist'] },
   {
+    extends: compat.extends('eslint:recommended'),
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -23,7 +36,6 @@ export default [
       '@stylistic/js': stylisticJs
     },
     rules: {
-      ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
@@ -32,6 +44,7 @@ export default [
       ],
       '@stylistic/js/quotes': ['warn', 'single'],
       '@stylistic/js/quote-props': ['error', 'as-needed']
-    },
-  },
-]
+    }
+  }
+])
+
