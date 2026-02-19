@@ -4,21 +4,25 @@
   "private": true,
   "description": "@novice1 React packages",
   "scripts": {
-    "build": "lerna run build --ignore docs",
-    "lint": "lerna run lint",
-    "release:build": "lerna run --concurrency 8 --no-private build --skip-nx-cache",
-    "release:publish": "pnpm publish --recursive --tag latest",
-    "release:version": "lerna version --no-changelog --no-push --no-git-tag-version --no-private",
-    "test": "lerna run test"
+    "build": "pnpm -r build",
+    "dev:react-router-paneling-framework": "pnpm --filter react-router-paneling-framework dev",
+    "dev:react-router-paneling-vite-js": "pnpm --filter react-router-paneling-vite-js dev",
+    "dev:react-router-paneling-vite-ts": "pnpm --filter react-router-paneling-vite-ts dev",
+    "lint": "pnpm -r lint",
+    "release:build": "pnpm --filter \"./packages/*\" -r build",
+    "release:test": "pnpm --filter \"./packages/*\" -r test",
+    "release:publish": "pnpm --filter \"./packages/*\" -r publish --access public",
+    "release:version": "pnpm --filter \"./packages/*\" -r exec npm version",
+    "test": "pnpm -r test"
   },
   "workspaces": [
     "examples/*",
     "packages/*"
   ],
   "keywords": [],
-  "author": "",
+  "author": "demingongo",
   "license": "MIT",
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.30.0",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
@@ -30,7 +34,6 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.0",
     "globals": "^17.3.0",
-    "lerna": "^8.2.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0",
     "vite": "^6.4.1",
