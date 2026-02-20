@@ -38,6 +38,7 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
         ),
         indexComponent: IndexPage,
         max: 8,
+        separator: ';',
         panels: {
             info: createCustomPanel(
               InfoContent,

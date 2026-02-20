@@ -15,7 +15,8 @@ export function createRouteObject<C extends object = object, P extends object = 
     errorElement,
     errorComponent: customErrorElement,
     indexComponent: customIndexElement,
-    max
+    max,
+    separator
 }: {
     panels: Record<string, FunctionComponent<P & IPanelProps<C>>>
 
@@ -33,6 +34,7 @@ export function createRouteObject<C extends object = object, P extends object = 
     errorComponent?: FunctionComponent<P & IPanelProps<C>>
     indexComponent?: FunctionComponent
     max?: number
+    separator?: string
 }): RouteObject {
     const panels = customPanels || {};
     const errorComponent = customErrorElement || DefaultErrorPanel;
@@ -49,7 +51,8 @@ export function createRouteObject<C extends object = object, P extends object = 
             max,
             errorComponent,
             indexComponent,
-            panels
+            panels,
+            separator
         }),
         action: createAction(),
     }
@@ -91,7 +94,7 @@ function resolveRedirectPath(path?: string) {
     return result;
 }
 
-function parsePanelPath(panelPath: string): { name: string, extras: Record<string, string>, id?: string } | undefined {
+function parsePanelPath(panelPath: string, separator: string = ':'): { name: string, extras: Record<string, string>, id?: string } | undefined {
     if (!panelPath) return;
 
     const result: {
@@ -104,24 +107,34 @@ function parsePanelPath(panelPath: string): { name: string, extras: Record<strin
         extras: {}
     }
 
-    const firstIndex = panelPath.indexOf(':')
+    const firstIndex = panelPath.indexOf(separator || ':')
 
     if (firstIndex > 0) {
-        result.name = `${panelPath.substring(0, firstIndex)}:`
-        const extras = panelPath.split(':')
-        result.id = extras[1]
-        extras.splice(0, 2)
-        for (let i = 0; i < extras.length - 1; i = i + 2) {
-            result.extras[extras[i]] = extras[i + 1]
+        // The name of the panel
+        // Using the default separator (:) to name the panels so 
+        // we don't mix definition and usage together.
+        // Usage may change with separator but definition will stay the same.
+        result.name = `${panelPath.substring(0, firstIndex)}:`;
+        const extras = panelPath.split(separator || ':');
+        result.id = extras[1];
+        extras.splice(0, 2);
+        for (let i = 0; i < extras.length; i++) {
+            const [key, ...valueParts] = extras[i].split('=');
+            if (key) {
+                // Handle '=' in values
+                const value = valueParts.join('=') 
+                result.extras[key] = value ?? ''
+            }
         }
     }
 
     return result
 }
 
-function createLoader<C extends object = object, T extends IPanelProps<C> = IPanelProps<C>>({ path, max, panels, errorComponent, indexComponent }: {
+function createLoader<C extends object = object, T extends IPanelProps<C> = IPanelProps<C>>({ path, max, panels, errorComponent, indexComponent, separator }: {
     path?: string
     max?: number
+    separator?: string
     panels: Record<string, FunctionComponent<T>>
     errorComponent: FunctionComponent<T>
     indexComponent: FunctionComponent
@@ -141,7 +154,9 @@ function createLoader<C extends object = object, T extends IPanelProps<C> = IPan
                 redirectPath.push(panelPath)
                 const currentPath = redirectPath.join('/')
 
-                const parsed = parsePanelPath(panelPath)
+                const parsed = parsePanelPath(panelPath, separator)
+
+                console.log('parsed', parsed)
 
                 if (parsed && panels[parsed.name]) {
                     stack.push({
@@ -212,12 +227,14 @@ export type ClientLoaderArgs = {
 export function createClientLoader<C extends object = object, P extends object = object>({
     path,
     max,
+    separator,
     panels,
     errorComponent = DefaultErrorPanel,
     indexComponent = DefaultIndexComponent
 }: {
     path?: string
     max?: number
+    separator?: string
     panels: Record<string, FunctionComponent<P & IPanelProps<C>>>
     errorComponent?: FunctionComponent<P & IPanelProps<C>>
     indexComponent?: FunctionComponent
@@ -237,7 +254,7 @@ export function createClientLoader<C extends object = object, P extends object =
                 redirectPath.push(panelPath)
                 const currentPath = redirectPath.join('/')
 
-                const parsed = parsePanelPath(panelPath)
+                const parsed = parsePanelPath(panelPath, separator)
 
                 if (parsed && panels[parsed.name]) {
                     stack.push({
