@@ -1,54 +1,68 @@
-# React + TypeScript + Vite
+# react-router-paneling-vite-ts
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An example project demonstrating how to use [`@novice1-react/react-router-paneling`](../../packages/react-router-paneling) in React Router **Data Mode** with **Vite** and **TypeScript**.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This example shows how to set up paneling in Data Mode using `createPaneling`. It uses React Context to share panel state between the panel wrapper and its content components.
 
-## Expanding the ESLint configuration
+For a Framework Mode variant, see [react-router-paneling-framework](../react-router-paneling-framework).
+For a JavaScript variant, see [react-router-paneling-vite-js](../react-router-paneling-vite-js).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+![Example](https://raw.githubusercontent.com/kisiwu/novice-react/refs/heads/main/examples/react-router-paneling-vite-ts/example.png)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Project structure
+
+```
+src/
+├── components/
+│   ├── contents/              # Panel content components
+│   │   ├── ErrorContent.tsx
+│   │   ├── ExtraContent.tsx
+│   │   └── InfoContent.tsx
+│   └── panels/
+│       └── CustomPanel.tsx    # Panel layout with React Context provider
+├── hooks/
+│   ├── useCustomPanel.ts      # React Context for per-panel state
+│   └── usePanelManager.ts     # React Context for panel manager state
+├── pages/
+│   ├── ErrorPage.tsx
+│   └── IndexPage.tsx
+├── routes/
+│   └── PanelManager.tsx       # Route component using usePaneling
+├── utils/
+└── main.tsx                   # App entry point with route configuration
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Install dependencies
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+pnpm install
 ```
+
+### Development
+
+```bash
+pnpm dev
+```
+
+### Build
+
+```bash
+pnpm build
+```
+
+### Preview production build
+
+```bash
+pnpm preview
+```
+
+## References
+
+- [`@novice1-react/react-router-paneling`](../../packages/react-router-paneling)
+- [React Router Data Mode](https://reactrouter.com/start/data/installation)
+- [Framework Mode example](../react-router-paneling-framework)
+- [JavaScript variant](../react-router-paneling-vite-js)

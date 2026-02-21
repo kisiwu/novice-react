@@ -1,87 +1,77 @@
-# Welcome to React Router!
+# react-router-paneling-framework
 
-A modern, production-ready template for building full-stack React applications using React Router.
+An example project demonstrating how to use [`@novice1-react/react-router-paneling`](../../packages/react-router-paneling) in React Router **Framework Mode** with **React Context** for panel state management.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Overview
 
-## Features
+This example shows how to set up paneling in Framework Mode using `createClientLoader`. It uses React Context to share panel state (title, minimized, etc.) between the panel wrapper and its content components.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+For a variant using Zustand instead of React Context, see [react-router-paneling-zustand](../react-router-paneling-zustand).
 
-## Getting Started
+## Project structure
 
-### Installation
+```
+app/
+├── components/
+│   ├── contents/              # Panel content components
+│   │   ├── ErrorContent.tsx
+│   │   ├── ExtraContent.tsx
+│   │   └── InfoContent.tsx
+│   └── panels/
+│       └── CustomPanel.tsx    # Panel layout with React Context provider
+├── hooks/
+│   ├── useCustomPanel.ts      # React Context for per-panel state
+│   └── usePanelManager.ts     # React Context for panel manager state
+├── pages/
+│   ├── ErrorPage.tsx
+│   └── IndexPage.tsx
+├── routes/
+│   ├── home.tsx               # Home route
+│   └── paneling.tsx           # Paneling route with clientLoader
+├── utils/
+│   └── drag.ts
+├── definitions.ts             # Shared type definitions
+├── root.tsx
+└── routes.ts                  # Route definitions
+```
 
-Install the dependencies:
+## Getting started
+
+### Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Development
 
-Start the development server with HMR:
+Start the development server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+### Build
 
 ```bash
-npm run build
+pnpm build
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+### Start production server
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+pnpm start
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+### Docker
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+```bash
+docker build -t react-router-paneling-framework .
+docker run -p 3000:3000 react-router-paneling-framework
 ```
 
-## Styling
+## References
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- [`@novice1-react/react-router-paneling`](../../packages/react-router-paneling)
+- [React Router Framework Mode](https://reactrouter.com/start/framework/installation)
+- [Zustand variant](../react-router-paneling-zustand)
