@@ -8,6 +8,7 @@
     "dev:react-router-paneling-framework": "pnpm --filter react-router-paneling-framework dev",
     "dev:react-router-paneling-vite-js": "pnpm --filter react-router-paneling-vite-js dev",
     "dev:react-router-paneling-vite-ts": "pnpm --filter react-router-paneling-vite-ts dev",
+    "dev:react-router-paneling-zustand": "pnpm --filter react-router-paneling-zustand dev",
     "lint": "pnpm -r lint",
     "release:build": "pnpm --filter \"./packages/*\" -r build",
     "release:test": "pnpm --filter \"./packages/*\" -r test",

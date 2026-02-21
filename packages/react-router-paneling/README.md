@@ -391,6 +391,8 @@ export default function IndexPage () {
 
 In Framework Mode, your route component handles the rendering. You can use one of three approaches:
 
+> **Note:** Render only **one** instance of `Paneling` or call `paneling()` from `usePaneling` only **once** per page. Multiple instances would render duplicate panel stacks.
+
 #### With `Paneling`
 
 ```tsx
