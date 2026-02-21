@@ -5,8 +5,40 @@ import { ILoaderData, StackType, IPanelProps } from './definitions.ts'
 import DefaultErrorPanel from './default-error-panel.tsx';
 import DefaultIndexComponent from './default-index-component.tsx';
 
-export const createPaneling = createRouteObject;
-
+/**
+ * Creates a paneling route object for React Router.
+ * 
+ * This function configures a route that manages multiple stacked panels in a single route path.
+ * Each panel can be identified by a name, ID, and additional key-value parameters.
+ * 
+ * **Note:** This is for Data Mode only. For Framework Mode, use {@link createClientLoader}.
+ * 
+ * @param config.panels - Map of panel names to their component implementations
+ * @param config.path - Base path for the route (defaults to '*')
+ * @param config.element - React element to render (alternative to Component)
+ * @param config.Component - Component to render (alternative to element)
+ * @param config.errorElement - Error boundary element
+ * @param config.errorComponent - Error panel component to display errors
+ * @param config.indexComponent - Component to render when no panels are active
+ * @param config.max - Maximum number of panels allowed in the stack
+ * @param config.separator - Character used to separate panel segments (default ':')
+ *
+ * @example
+ * ```typescript
+ * const route = createPaneling({
+ *   panels: {
+ *     'user:': UserPanel,
+ *     'settings:': SettingsPanel
+ *   },
+ *   path: '/app',
+ *   max: 3,
+ *   separator: ';'
+ * });
+ * 
+ * // URL: /app/user;123;role=admin/settings;456
+ * // Creates stack: [UserPanel, SettingsPanel] with respective IDs and extras
+ * ```
+ */
 export function createRouteObject<C extends object = object, P extends object = object>({
     panels: customPanels,
     path,
@@ -57,6 +89,12 @@ export function createRouteObject<C extends object = object, P extends object = 
         action: createAction(),
     }
 }
+
+/**
+ * Alias for {@link createRouteObject}.
+ * Creates a paneling route object for React Router (Data Mode).
+ */
+export const createPaneling = createRouteObject;
 
 function resolveRouteObjectPath(path?: string) {
     let result = path ? `${path}` : ''
@@ -213,6 +251,9 @@ function createAction() {
     }
 }
 
+/**
+ * Arguments passed to client-side loaders in React Router.
+ */
 export type ClientLoaderArgs = {
     params: {
         '*': string;
@@ -222,7 +263,33 @@ export type ClientLoaderArgs = {
 }
 
 /**
- * Framework Mode
+ * Creates a client-side loader for paneling routes (Framework Mode).
+ * 
+ * This function is used exclusively in Framework Mode where you need to process
+ * panel paths on the client using the `clientLoader` API.
+ * 
+ * **Note:** This is for Framework Mode only. For Data Mode, use {@link createPaneling}.
+ * 
+ * @param config.path - Base path for the route
+ * @param config.max - Maximum number of panels allowed in the stack
+ * @param config.separator - Character used to separate panel segments (default ':')
+ * @param config.panels - Map of panel names to their component implementations
+ * @param config.errorComponent - Error panel component to display errors
+ * @param config.indexComponent - Component to render when no panels are active
+ *
+ * @example
+ * ```typescript
+ * export async function clientLoader(args: Route.ClientLoaderArgs) {
+ *   return await createClientLoader({
+ *     path: 'paneling',
+ *     panels: {
+ *       'user:': UserPanel
+ *     },
+ *     separator: ';',
+ *     max: 8
+ *   })(args);
+ * }
+ * ```
  */
 export function createClientLoader<C extends object = object, P extends object = object>({
     path,
