@@ -13,7 +13,10 @@
     "release:test": "pnpm --filter \"./packages/*\" -r test",
     "release:publish": "pnpm --filter \"./packages/*\" -r publish --access public",
     "release:version": "pnpm --filter \"./packages/*\" -r exec npm version",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "version:patch": "pnpm --filter \"./packages/*\" -r exec npm version patch",
+    "version:minor": "pnpm --filter \"./packages/*\" -r exec npm version minor",
+    "version:major": "pnpm --filter \"./packages/*\" -r exec npm version major"
   },
   "workspaces": [
     "examples/*",
