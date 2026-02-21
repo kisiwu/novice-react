@@ -1,14 +1,91 @@
 # `@novice1-react/react-router-paneling`
 
-React Router Paneling is a library to use with React Router to create routes where each segment of the path is a panel.
+A library for [React Router](https://reactrouter.com/) that turns each segment of a URL path into a panel. Stack multiple panels by simply navigating to deeper paths, each segment mapping to a panel component.
 
-## Usage
+## Install
 
-You can use `@novice1-react/react-router-paneling` in [Data Mode](#data-mode) or in [Framework Mode](#framework-mode).
+```bash
+npm install @novice1-react/react-router-paneling
+```
 
-### DATA MODE
+## Overview
 
-For a basic usage example in [Data Mode](https://reactrouter.com/start/data/installation) without much customization, you can place the code below in `main.jsx` or `main.tsx` file:
+The library works with both [Data Mode](#data-mode) and [Framework Mode](#framework-mode) of React Router.
+
+| Mode | Function | Description |
+|------|----------|-------------|
+| Data Mode | `createPaneling` | Creates a complete route object with loader, action, and component |
+| Framework Mode | `createClientLoader` | Creates a client-side loader to use in your route's `clientLoader` export |
+
+### How it works
+
+Each URL path segment is parsed into a panel. Panels are registered by name, and each segment can optionally include an **ID** and **key-value extras**, separated by a configurable `separator` (default `:`).
+
+**URL structure:**
+
+```
+/<panelName><sep><id><sep><key>=<value><sep><key>=<value>/...
+```
+
+**Example** (with default separator `:`):
+
+```
+/user:abc123:role=admin/settings
+```
+
+This produces two panels:
+1. **user** - `id: 'abc123'`, `extras: { role: 'admin' }`
+2. **settings** - no id, no extras
+
+Your panel components receive these values as props (`id`, `extras`, `currentPath`, `previousPath`, etc.).
+
+### Separator
+
+The `separator` option controls the character used to separate segments within a single panel path (name, id, and extras). The default is `:`.
+
+For URLs where `:` might conflict, you can use another URL-safe character like `;`:
+
+```typescript
+createPaneling({
+  panels: { /* ... */ },
+  separator: ';'
+})
+```
+
+With `;` as separator, URLs look like:
+```
+/user;abc123;role=admin/settings;456
+```
+
+> **Note:** Keys in extras cannot contain `=` or the separator character. Values can contain `=`.
+
+### Extras (key-value parameters)
+
+Each panel segment can carry additional parameters after the ID. These are parsed as key-value pairs joined by `=`:
+
+```
+/profile:id123:theme=dark:lang=en
+```
+
+The panel component receives:
+```typescript
+{
+  id: 'id123',
+  extras: { theme: 'dark', lang: 'en' }
+}
+```
+
+If a key has no `=`, it defaults to an empty string:
+```
+/profile:id123:verbose
+// extras: { verbose: '' }
+```
+
+---
+
+## Data Mode
+
+Use `createPaneling` to create a route object for [Data Mode](https://reactrouter.com/start/data/installation). Place this in your `main.jsx` or `main.tsx` file:
 
 ```tsx
 import { StrictMode } from 'react';
@@ -40,27 +117,17 @@ function ErrorPage() {
   return <h1>Error</h1>;
 }
 
-/**
- * Content of panel A
- */
 function PanelAContent({ currentPath }: { currentPath: string }) {
   return <div>
     <h1>Panel A: {currentPath}</h1>
-    <div>
-      <LinksMenu basePath={currentPath} />
-    </div>
+    <LinksMenu basePath={currentPath} />
   </div>
 }
 
-/**
- * Content of panel B
- */
 function PanelBContent({ currentPath }: { currentPath: string }) {
   return <div>
     <h1>Panel B: {currentPath}</h1>
-    <div>
-      <LinksMenu basePath={currentPath} />
-    </div>
+    <LinksMenu basePath={currentPath} />
   </div>
 }
 
@@ -70,9 +137,6 @@ const router = createBrowserRouter([
     Component: Root,
     errorElement: <ErrorPage />,
     children: [
-      /**
-       * Create the route that will handle panels
-       */
       createPaneling({
         panels: {
           a: createPanel(PanelAContent),
@@ -91,31 +155,31 @@ createRoot(document.getElementById('root')!).render(
 )
 ```
 
-Start your server and access it on your browser. You should see links rendered by the component `Root`.
-    
-- When you access `/a`, `PanelAContent` is rendered
-- When you access `/b`, `PanelBContent` is rendered
-- When you access `/a/b`, `PanelAContent` is rendered then `PanelBContent`
-- When you access `/b/a`, `PanelBContent` is rendered then `PanelAContent`
-- etc ...
+With this setup:
 
-We limited the route to 5 segments so 5 panels with `max: 5`. Even if we try to add more segments in the address bar, we get redirected to display the maximum number of panels defined.
+- `/a` renders `PanelAContent`
+- `/b` renders `PanelBContent`
+- `/a/b` renders `PanelAContent` then `PanelBContent`
+- `/b/a` renders `PanelBContent` then `PanelAContent`
 
-Instead of using `createPanel` you could use `createCustomPanel`, use your own component to display the panels and add style to make your panels like like whatever you want like [here](https://raw.githubusercontent.com/kisiwu/novice-react/refs/heads/main/examples/react-router-paneling-vite-ts/example.png).
+The `max: 5` option limits the stack to 5 panels. If the URL contains more segments, the user is redirected to show only the allowed maximum.
 
-The documentation being ongoing, you can find some examples:
-- https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-vite-js
-- https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-vite-ts
+Instead of `createPanel`, you can use `createCustomPanel` to provide your own panel layout component and style them however you want ([example](https://raw.githubusercontent.com/kisiwu/novice-react/refs/heads/main/examples/react-router-paneling-vite-ts/example.png)).
 
+More Data Mode examples:
+- [Vite + JS](https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-vite-js)
+- [Vite + TS](https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-vite-ts)
 
-### FRAMEWORK MODE
+---
 
-To use React Router Paneling in [Framework Mode](https://reactrouter.com/start/framework/installation), you have to make use of `clientLoader` of your route and `createClientLoader` of `@novice1-react/react-router-paneling`. 
-Also you will have to register your route with a `*`.
+## Framework Mode
 
-Let's use an example to understand the usage.
+Use `createClientLoader` in [Framework Mode](https://reactrouter.com/start/framework/installation). You need to:
+1. Register your route with a `*` wildcard
+2. Export a `clientLoader` that calls `createClientLoader`
+3. Render the panels in your route component
 
-- First register the route.
+### 1. Register the route
 
 ```ts
 // routes.ts
@@ -124,11 +188,11 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 export default [
     // ...
-    route('paneling/*', 'routes/paneling.tsx') // saved route 'paneling/*'
+    route('paneling/*', 'routes/paneling.tsx')
 ] satisfies RouteConfig;
 ```
 
-- Then we will create the route component.
+### 2. Create the client loader
 
 ```tsx
 // routes/paneling.tsx
@@ -140,10 +204,7 @@ import {
     createCustomPanel,
 } from "@novice1-react/react-router-paneling";
 
-// your own customized panel layout
 import CustomPanel from "~/components/panels/CustomPanel";
-
-// your own content components
 import IndexPage from "~/components/IndexPage";
 import ErrorContent from "~/components/contents/ErrorContent";
 import InfoContent from "~/components/contents/InfoContent";
@@ -158,29 +219,32 @@ export function meta({ }: Route.MetaArgs) {
 
 export async function clientLoader(args: Route.ClientLoaderArgs) {
     const clientData = await createClientLoader({
-        // required to repeat the route here with or without '*'
+        // repeat the route path here (with or without '*')
         path: 'paneling', 
-        
-        // the content that will be displayed at '/paneling'
+
+        // component displayed when no panels are active
         indexComponent: IndexPage,
         
-        // the content that will be displayed for unknown panels
+        // component displayed for unknown panel names
         errorComponent: createCustomPanel(
             ErrorContent,
             CustomPanel
         ),
         
-        // the maximum number of panels on the page
+        // maximum number of panels in the stack
         max: 8,
 
-        // the panels (examples)
+        // separator for panel segments (default is ':')
+        separator: ':',
+
+        // registered panels
         panels: {
-            // the panel 'info' (e.g.: /paneling/info)
+            // simple panel at /paneling/info
             info: createCustomPanel(
               InfoContent,
               CustomPanel
             ),
-            // the panel 'extra' (e.g.: /paneling/extra:here-is-my-id/)
+            // panel with ID support at /paneling/extra:<id>
             'extra:': createCustomPanel(
               ExtraContent,
               CustomPanel
@@ -193,52 +257,48 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
     return { ...clientData };
 }
 
-// HydrateFallback is rendered while the client loader is running
 export function HydrateFallback() {
     return <div>Loading...</div>;
 }
 
 export default function Paneling() {
-  // we will update the code here after defining the panels
+  // we will update this after defining the panels
 
   return <div>Paneling</div>
 }
 ```
 
-- Let's say that we would like to send more props to the panel component and to the content components. One thing we would like to know is the index order of the panel. We create the types for add that information.
+> **Panel name convention:** A panel registered as `'extra:'` (with a trailing `:`) expects an ID segment. A panel registered as `'info'` (without trailing `:`) does not.
+
+### 3. Extending panel props
+
+If you need to pass additional props to your panels (e.g., the panel's index), define extension types:
 
 ```ts
 // types.ts
 
 import type { IPanelContentProps, IPanelProps } from "@novice1-react/react-router-paneling"
 
-// additional props for the panel
 export type PanelPropsExtension = {
     panelIndex: number,
 }
 
-// additional props for the content component of the panel
 export type ContentPropsExtension = {
     panelIndex: number
 }
 
-// all the props for the panel
 export type PanelProps = IPanelProps<ContentPropsExtension> & PanelPropsExtension
 
-// all the props for the content of panel
 export type ContentProps = IPanelContentProps & ContentPropsExtension
 ```
 
-- So now in our panel, we want to use that additional property and send it to our content.
+Then use those types in your components:
 
 ```tsx
 // components/panels/CustomPanel.tsx
 
 import type { PanelProps } from '../../types'
 
-/**
- * This will be our layout
- */
 export default function CustomPanel ({
     panelIndex,
     content,
@@ -249,8 +309,6 @@ export default function CustomPanel ({
   </div>
 }
 ```
-
-- And we want to use that property in our content component.
 
 ```tsx
 // components/contents/ExtraContent.tsx
@@ -329,9 +387,9 @@ export default function IndexPage () {
 }
 ```
 
-In framework mode, your route will be the equivalent of `element` or `Component` in the `createPaneling` method of data mode. So it will be up to you to handle the rendering of your panels. You could use the component `Paneling`, the method `usePanel` or directly `LoaderData` if you want to have full control on the rendering.
+### 4. Rendering panels
 
-- Now we have to update the rendering of our route/component `Paneling` to display those panels and send the additional property `panelIndex`.
+In Framework Mode, your route component handles the rendering. You can use one of three approaches:
 
 #### With `Paneling`
 
@@ -363,7 +421,7 @@ export default function Paneling() {
 }
 ```
 
-#### With `usePanel`
+#### With `usePaneling`
 
 ```tsx
 // routes/paneling.tsx
@@ -389,7 +447,7 @@ export default function Paneling() {
   }
 
   const { paneling } = usePaneling({ extension })
-  // or strictly typed
+  // or strictly typed:
   // const { paneling } = usePaneling<ContentPropsExtension, PanelPropsExtension>({ extension }) 
 
   return <div>{paneling()}</div>
@@ -397,6 +455,8 @@ export default function Paneling() {
 ```
 
 #### With `LoaderData`
+
+For full control over rendering:
 
 ```tsx
 // routes/paneling.tsx
@@ -447,5 +507,5 @@ export default function Paneling() {
 }
 ```
 
-The documentation being ongoing, you can find some examples:
-- https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-framework
+More Framework Mode examples:
+- [Framework example](https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-framework)

@@ -1,3 +1,8 @@
-- createPaneling.ts
-    - parsePanelPath(panelPath: string) to extract panel segments must receive separator character for extras as argument, defaulting to ':' @done
-    - jsdoc
+v1.0.0
+    - createPaneling.ts @done
+        - parsePanelPath(panelPath: string) to extract panel segments must receive separator character for extras as argument, defaulting to ':' @done
+        - jsdoc @done
+    - Readme @done 
+    - change major version @done
+    - changelog
+    - publish
