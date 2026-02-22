@@ -37,18 +37,31 @@ export default function PanelChild() {
                 <li>minimized: {context.minimized ? 'true' : 'false'}</li>
                 <li>panelIndex: {context.panelIndex}</li>
                 <li>extras: {context.extras ? JSON.stringify(context.extras) : 'none'}</li>
-                <li>Try to change the title of the panel using the input in the panel header, or minimize it using the minimize button &#128521;</li>
+                <li>Try to change the title of the panel using the input below, or minimize it using the minimize button &#128521;</li>
             </ul>
-            <form onSubmit={(e) => {
-                e.preventDefault()
-                const formData = new FormData(e.currentTarget)
-                const title = formData.get('title')
-                if (title) {
-                    usePanelingStore.getState().setPanelTitle(panelIndex, title.toString())
-                }
-            }}>
-                <input type="text" name="title" placeholder="New title" />
-                <button type="submit">Update Title</button>
+            <form
+                className="flex items-center gap-2 mt-4"
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    const formData = new FormData(e.currentTarget)
+                    const title = formData.get('title')
+                    if (title) {
+                        usePanelingStore.getState().setPanelTitle(panelIndex, title.toString())
+                    }
+                }}
+            >
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="New title"
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+                <button
+                    type="submit"
+                    className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                    Update Title
+                </button>
             </form>
         </div>
     );

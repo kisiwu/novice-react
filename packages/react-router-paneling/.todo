@@ -5,4 +5,5 @@ v1.0.0
     - Readme @done 
     - change major version @done
     - changelog @done
+    - send separator character for extras to panels
     - publish
