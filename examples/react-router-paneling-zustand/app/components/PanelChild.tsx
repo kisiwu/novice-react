@@ -1,12 +1,15 @@
 // client-only component (uses Zustand)
 "use client";
 
+import type { ILoaderData } from '@novice1-react/react-router-paneling';
 import { useEffect } from 'react';
+import { useLoaderData } from 'react-router';
 import { usePanelIndex } from '~/hooks/usePanelIndex';
 import { usePanelingStore } from '~/hooks/usePanelingStore';
 
 export default function PanelChild() {
 
+    const { extrasSeparator } = useLoaderData<ILoaderData>()
     const panelIndex = usePanelIndex()
     const context = usePanelingStore((state) => state.panels[panelIndex]?.context)
 
@@ -32,12 +35,13 @@ export default function PanelChild() {
                 <li>currentPath: {context.currentPath}</li>
                 <li>panelPath: {context.panelPath}</li>
                 <li>previousPath: {context.previousPath}</li>
-                <li>splat: {context.splat}</li>
+                <li>splat: {context.splat.join('/')}</li>
                 <li>id: {context.id}</li>
                 <li>title: {context.title}</li>
                 <li>minimized: {context.minimized ? 'true' : 'false'}</li>
                 <li>panelIndex: {context.panelIndex}</li>
                 <li>extras: {context.extras ? JSON.stringify(context.extras) : 'none'}</li>
+                <li>extrasSeparator: {extrasSeparator}</li>
                 <li>Try to change the title of the panel using the input below, or minimize it using the minimize button &#128521;</li>
             </ul>
             <form
