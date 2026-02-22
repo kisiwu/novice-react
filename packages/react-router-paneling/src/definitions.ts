@@ -33,6 +33,7 @@ export type StackType<C extends object = object, T extends IPanelProps<C> = IPan
 export interface ILoaderData<C extends object = object, T extends IPanelProps<C> = IPanelProps<C>> {
     readonly splat: string[];
     readonly stack: StackType<C, T>;
+    readonly extrasSeparator: string;
 }
 
 export type LoaderData<C extends object = object, P extends object = object> = ILoaderData<C, P & IPanelProps<C>>

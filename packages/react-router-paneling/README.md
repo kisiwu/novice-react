@@ -19,7 +19,7 @@ The library works with both [Data Mode](#data-mode) and [Framework Mode](#framew
 
 ### How it works
 
-Each URL path segment is parsed into a panel. Panels are registered by name, and each segment can optionally include an **ID** and **key-value extras**, separated by a configurable `separator` (default `:`).
+Each URL path segment is parsed into a panel. Panels are registered by name, and each segment can optionally include an **ID** and **key-value extras**, separated by a configurable `extrasSeparator` (default `:`).
 
 **URL structure:**
 
@@ -39,25 +39,25 @@ This produces two panels:
 
 Your panel components receive these values as props (`id`, `extras`, `currentPath`, `previousPath`, etc.).
 
-### Separator
+### Extras separator
 
-The `separator` option controls the character used to separate segments within a single panel path (name, id, and extras). The default is `:`.
+The `extrasSeparator` option controls the character used to separate segments within a single panel path (name, id, and extras). The default is `:`.
 
 For URLs where `:` might conflict, you can use another URL-safe character like `;`:
 
 ```typescript
 createPaneling({
   panels: { /* ... */ },
-  separator: ';'
+  extrasSeparator: ';'
 })
 ```
 
-With `;` as separator, URLs look like:
+With `;` as extras separator, URLs look like:
 ```
 /user;abc123;role=admin/settings;456
 ```
 
-> **Note:** Keys in extras cannot contain `=` or the separator character. Values can contain `=`.
+> **Note:** Keys in extras cannot contain `=` or the extras separator character. Values can contain `=`.
 
 ### Extras (key-value parameters)
 
@@ -234,8 +234,9 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
         // maximum number of panels in the stack
         max: 8,
 
-        // separator for panel segments (default is ':')
-        separator: ':',
+        // character used to separate the panel name, id and extras within a URL segment (default ':')
+        extrasSeparator: ':',
+
 
         // registered panels
         panels: {

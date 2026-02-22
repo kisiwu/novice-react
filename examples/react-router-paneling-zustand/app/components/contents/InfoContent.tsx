@@ -23,7 +23,7 @@ export default function InfoContent({ currentPath, panelIndex, panelPath, setTit
                 <Link to={pathname + '/extra;4448-927777-633-3444666'}>open extra panel 4448-927777-633-3444666</Link>
             </div>
             <div>
-                <Link to={pathname + '/special'}>open special panel</Link>
+                <Link to={currentPath + '/special'}>open special panel</Link>
             </div>
         </div>
     </div>

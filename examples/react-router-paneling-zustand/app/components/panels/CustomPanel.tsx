@@ -1,3 +1,4 @@
+// client-only component (uses Zustand)
 "use client";
 
 import { type MouseEventHandler, type RefObject, type TouchEventHandler, useCallback, useEffect, useRef } from 'react'

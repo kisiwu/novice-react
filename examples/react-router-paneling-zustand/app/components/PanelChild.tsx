@@ -1,3 +1,4 @@
+// client-only component (uses Zustand)
 "use client";
 
 import { useEffect } from 'react';
