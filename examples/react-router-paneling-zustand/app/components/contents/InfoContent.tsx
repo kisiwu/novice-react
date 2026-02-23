@@ -9,7 +9,7 @@ export default function InfoContent({ currentPath, panelIndex }: ContentProps) {
     const context = usePanelingStore((state) => state.panels[panelIndex]?.context)
 
     const { pathname } = useLocation()
-    const { createPanelPath } = usePanelNav()
+    const { createPanelPath, navigate } = usePanelNav()
 
     useEffect(() => {
         // set the initial title of the panel
@@ -41,6 +41,15 @@ export default function InfoContent({ currentPath, panelIndex }: ContentProps) {
                     { panel: 'info' },
                     { panel: 'extra', id: '4448-927777-633-3444666' },
                 ])}>open multiple panels</Link>
+            </div>
+            <div>
+                <button 
+                className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={() => navigate([
+                    { panel: 'special', extras: { title: 'Special Panel' } },
+                    { panel: 'info' },
+                    { panel: 'extra', id: '4448-927777-633-3444666' },
+                ])}>open multiple panels with navigate</button>
             </div>
         </div>
     </div>

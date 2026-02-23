@@ -1,7 +1,7 @@
 import { createElement} from 'react'
 import { ILoaderData, IPanelProps, IStackElement } from './definitions'
 
-function getBaseUrl(splat: string[], pathname: string) {
+export function getBaseUrl(splat: string[], pathname: string) {
     const decodedPathname = decodeURIComponent(pathname)
     return splat.length && splat[0] == '' ?
         decodedPathname.substring(0, 1) + decodedPathname.substring(1).replace(`/${splat.join('/')}`, '') :

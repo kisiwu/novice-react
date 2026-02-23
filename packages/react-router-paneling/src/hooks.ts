@@ -1,6 +1,6 @@
 import { useLoaderData, useLocation, useNavigate } from 'react-router';
 import { ILoaderData, IStackElement, IPanelProps, IPanelSegment } from './definitions';
-import { createCustomPanelProps, displayPanels } from './utils';
+import { createCustomPanelProps, displayPanels, getBaseUrl } from './utils';
 
 /**
  * Hook to interact with the panel stack based on the current route.
@@ -57,20 +57,26 @@ function createPanelPath(segments: IPanelSegment[], extrasSeparator: string): st
  * @returns 
  */
 export function usePanelNav() {
-    const { extrasSeparator } = useLoaderData<ILoaderData>();
+    const { extrasSeparator, splat } = useLoaderData<ILoaderData>();
     const navigate = useNavigate();
+    const { pathname } = useLocation()
+
+    const prefix = getBaseUrl(splat, pathname)
 
     return {
         createPanelPath(segments: IPanelSegment[]): string {
             return createPanelPath(segments, extrasSeparator);
         },
-        navigate(prefix: string, segments: IPanelSegment[], navigateTo?: (to: string) => void) {
+        navigate(segments: IPanelSegment[], navigateTo?: (to: string) => void) {
             const path = `${prefix}/${createPanelPath(segments, extrasSeparator)}`;
             if (navigateTo) {
                 navigateTo(path);
             } else {
                 navigate(path);
             }
+        },
+        get basePath() {
+            return prefix
         }
     }
 }
