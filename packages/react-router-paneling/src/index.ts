@@ -2,7 +2,7 @@ export * from './createPaneling'
 
 export * from './definitions'
 
-export { usePaneling } from './hooks'
+export { usePaneling, usePanelNav } from './hooks'
 
 export { Paneling } from './paneling'
 

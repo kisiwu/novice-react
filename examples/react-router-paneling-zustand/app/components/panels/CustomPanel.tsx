@@ -16,7 +16,6 @@ export default function CustomPanel ({
     id,
     panelPath,
     previousPath,
-    splat,
     content,
     children,
     setActivePanel,
@@ -62,16 +61,15 @@ export default function CustomPanel ({
             id,
             panelPath,
             previousPath,
-            splat,
-            title: '',
+            panelIndex,
             minimized: false,
-            panelIndex
+            title: ''
         })
         // Cleanup when panel unmounts
         return () => {
             removePanelContext(panelIndex)
         }
-    }, [currentPath, extras, id, panelPath, previousPath, splat, panelIndex])
+    }, [currentPath, extras, id, panelPath, previousPath, panelIndex])
 
     //#region panel render
 

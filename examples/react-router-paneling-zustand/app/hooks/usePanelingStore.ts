@@ -2,7 +2,7 @@
 import type { IPanelContentProps } from '@novice1-react/react-router-paneling'
 import { create } from 'zustand'
 
-export interface IZustandPanelContext extends IPanelContentProps {
+export interface IZustandPanelContext extends Omit<IPanelContentProps, 'splat'> {
     title: string
     minimized: boolean
     panelIndex: number
@@ -11,6 +11,12 @@ export interface IZustandPanelContext extends IPanelContentProps {
 export interface PanelState {
     panels: Record<string, { context: IZustandPanelContext }>
     setPanelContext: (id: string | number, context: IZustandPanelContext) => void
+    updatePanelContext: (id: string | number, context: Partial<IZustandPanelContext>) => void
+    updateOrSetPanelContext: (id: string | number, context: Omit<IPanelContentProps, 'splat'> & {
+        title?: string
+        minimized?: boolean
+        panelIndex: number
+    }) => void
     removePanelContext: (id: string | number) => void
     setPanelTitle: (id: string | number, title: string) => void
     setPanelMinimized: (id: string | number, minimized: boolean) => void
@@ -23,6 +29,24 @@ export const usePanelingStore = create<PanelState>((set) => ({
         set((state) => ({
             panels: { ...state.panels, [id]: { context } }
         })),
+    updatePanelContext: (id, context) =>
+        set((state) => {
+            const existingContext = state.panels[id]?.context
+            if (!existingContext) {
+                return state // no panel to update, return same reference
+            }
+            return {
+                panels: { ...state.panels, [id]: { context: { ...existingContext, ...context } } }
+            }
+        }),
+    updateOrSetPanelContext: (id, context) =>
+        set((state) => {
+            const existingContext = state.panels[id]?.context || { title: '', minimized: false }
+            const newContext = { ...existingContext, ...context }
+            return {
+                panels: { ...state.panels, [id]: { context: newContext } }
+            }
+        }),
     removePanelContext: (id: string | number) =>
         set(({ panels }) => {
             const { [id]: _removed, ...otherPanels } = panels

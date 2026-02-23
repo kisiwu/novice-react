@@ -1,5 +1,5 @@
-import { useLoaderData, useLocation } from 'react-router';
-import { ILoaderData, IStackElement, IPanelProps } from './definitions';
+import { useLoaderData, useLocation, useNavigate } from 'react-router';
+import { ILoaderData, IStackElement, IPanelProps, IPanelSegment } from './definitions';
 import { createCustomPanelProps, displayPanels } from './utils';
 
 /**
@@ -28,6 +28,49 @@ export function usePaneling<C extends object, P extends object = object>({ exten
                 pathname,
                 typeof extension === 'function' ? extension(idx) : extension
             )
+        }
+    }
+}
+
+function createPanelPath(segments: IPanelSegment[], extrasSeparator: string): string {
+    return segments.map(({ panel, extras, id }) => {
+        const hasExtras = extras && Object.keys(extras).length > 0
+        const hasId = !!id
+
+        // Build the extras string: key=value or key (if empty value)
+        const extrasString = hasExtras
+            ? extrasSeparator + Object.entries(extras)
+                .map(([k, v]) => v ? `${k}=${v}` : k)
+                .join(extrasSeparator)
+            : ''
+
+        // Add separator before id/extras only if there is something to separate
+        const sep = (hasId || hasExtras) ? extrasSeparator : ''
+        const idString = hasId ? id : ''
+
+        return `${panel}${sep}${idString}${extrasString}`
+    }).join('/');
+}
+
+/**
+ * Hook to create panel paths and navigate to them.
+ * @returns 
+ */
+export function usePanelNav() {
+    const { extrasSeparator } = useLoaderData<ILoaderData>();
+    const navigate = useNavigate();
+
+    return {
+        createPanelPath(segments: IPanelSegment[]): string {
+            return createPanelPath(segments, extrasSeparator);
+        },
+        navigate(prefix: string, segments: IPanelSegment[], navigateTo?: (to: string) => void) {
+            const path = `${prefix}/${createPanelPath(segments, extrasSeparator)}`;
+            if (navigateTo) {
+                navigateTo(path);
+            } else {
+                navigate(path);
+            }
         }
     }
 }

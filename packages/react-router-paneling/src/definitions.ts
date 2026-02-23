@@ -38,4 +38,10 @@ export interface ILoaderData<C extends object = object, T extends IPanelProps<C>
 
 export type LoaderData<C extends object = object, P extends object = object> = ILoaderData<C, P & IPanelProps<C>>
 
+export interface IPanelSegment {
+    panel: string
+    extras?: Record<string, string>
+    id?: string
+}
+
 export default {}

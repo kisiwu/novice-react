@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+- **usePanelNav**: Added `usePanelNav` hook for programmatic navigation between panels, providing a `navigate` function that accepts a target path and options for navigation behavior (e.g., replace, state).
+
 ## 1.0.0 (2026-02-22)
 
 ### Features

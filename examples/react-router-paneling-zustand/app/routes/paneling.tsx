@@ -79,7 +79,7 @@ export function HydrateFallback() {
 
 export default function Paneling() {
 
-    const type: PanelingType = 'stacking'
+    const type: PanelingType = 'tiling'
 
     const { stack } = useLoaderData<LoaderData<ContentPropsExtension, PanelPropsExtension>>();
 
@@ -106,7 +106,6 @@ export default function Paneling() {
     }, [stack.length])
 
     let surfaceClassname = 'w-full relative'
-    /*
     if (type === 'tiling') {
         const gridBreakpoint = stack.length > 6 ? 'xl' : stack.length > 4 ? 'lg' : 'sm'
         surfaceClassname = clsx(
@@ -124,7 +123,6 @@ export default function Paneling() {
             stack.length > 3 ? 'xl:grid-cols-12' : ''
         )
     }
-    */
 
     // const { paneling } = usePaneling({ extension }) // non-strict types
     const { paneling } = usePaneling<ContentPropsExtension, PanelPropsExtension>({ extension }) // strict types

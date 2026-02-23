@@ -23,10 +23,12 @@ export default function PanelChild() {
     }
 
     useEffect(() => {
-        if (context.extras?.title) {
+        // set the initial title of the panel based on the extras if it exists and if the title is not already set 
+        // (to avoid overwriting an existing title on re-render)
+        if (context.extras?.title && !context.title) {
             usePanelingStore.getState().setPanelTitle(panelIndex, context.extras.title)
         }
-    }, [context.extras?.title])
+    }, [panelIndex, context])
 
     return (
         <div className="extra-content">
@@ -35,7 +37,6 @@ export default function PanelChild() {
                 <li>currentPath: {context.currentPath}</li>
                 <li>panelPath: {context.panelPath}</li>
                 <li>previousPath: {context.previousPath}</li>
-                <li>splat: {context.splat.join('/')}</li>
                 <li>id: {context.id}</li>
                 <li>title: {context.title}</li>
                 <li>minimized: {context.minimized ? 'true' : 'false'}</li>
