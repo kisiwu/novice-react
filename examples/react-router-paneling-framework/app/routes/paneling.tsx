@@ -1,10 +1,10 @@
 import type { Route } from './+types/paneling';
 import { useLoaderData } from 'react-router';
-import { 
-    createClientLoader, 
-    createCustomPanel, 
-    usePaneling, 
-    type FunctionExtension, 
+import {
+    createClientLoader,
+    createCustomPanel,
+    usePaneling,
+    type FunctionExtension,
     type LoaderData
 } from '@novice1-react/react-router-paneling';
 import ErrorContent from '~/components/contents/ErrorContent';
@@ -16,6 +16,31 @@ import type { ContentPropsExtension, PanelingType, PanelPropsExtension } from '~
 import { useCallback, useEffect, useState } from 'react';
 import { PanelManagerContext } from '~/hooks/usePanelManager';
 import clsx from 'clsx';
+
+const panelingConfig = {
+    path: 'paneling',
+    errorComponent: createCustomPanel(
+        ErrorContent,
+        CustomPanel
+    ),
+    indexComponent: IndexPage,
+    max: 8,
+    extrasSeparator: ';',
+    panels: {
+        info: createCustomPanel(
+            InfoContent,
+            CustomPanel
+        ),
+        extra: createCustomPanel(
+            ExtraContent,
+            CustomPanel
+        ),
+        'extra:': createCustomPanel(
+            ExtraContent,
+            CustomPanel
+        )
+    }
+}
 
 export function meta({ }: Route.MetaArgs) {
     return [
@@ -30,33 +55,10 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 export async function clientLoader(args: Route.ClientLoaderArgs) {
     const serverData = (await args.serverLoader()) || {};
-    const clientData = await createClientLoader({
-        path: 'paneling',
-        errorComponent: createCustomPanel(
-            ErrorContent,
-            CustomPanel
-        ),
-        indexComponent: IndexPage,
-        max: 8,
-        extrasSeparator: ';',
-        panels: {
-            info: createCustomPanel(
-              InfoContent,
-              CustomPanel
-            ),
-            extra: createCustomPanel(
-              ExtraContent,
-              CustomPanel
-            ),
-            'extra:': createCustomPanel(
-              ExtraContent,
-              CustomPanel
-            )
-        }
-    })(args)
+    const clientData = await createClientLoader(panelingConfig)(args)
 
     if (clientData instanceof Response) return clientData
-    
+
     return { ...serverData, ...clientData };
 }
 
