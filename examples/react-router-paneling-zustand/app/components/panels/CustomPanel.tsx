@@ -1,7 +1,15 @@
 // client-only component (uses Zustand)
 "use client";
 
-import { type MouseEventHandler, type RefObject, type TouchEventHandler, useCallback, useEffect, useRef } from 'react'
+import { 
+    type MouseEventHandler, 
+    type RefObject, 
+    type TouchEventHandler, 
+    useCallback, 
+    useEffect, 
+    useRef, 
+    memo 
+} from 'react'
 import clsx from 'clsx'
 import { setupMouseDragEvents, setupTouchDragEvents } from '~/utils/drag'
 import type { IPanelProps } from '@novice1-react/react-router-paneling';
@@ -10,7 +18,23 @@ import { useNavigate } from 'react-router'
 import { usePanelingStore } from '~/hooks/usePanelingStore';
 import { PanelIndexContext } from '~/hooks/usePanelIndex';
 
-export default function CustomPanel ({
+// avoid unnecessary re-renders of the panel by memoizing it 
+// and only re-rendering if the props that are used to set 
+// the context in the store change (currentPath, previousPath, panelPath, extras)
+export default memo(CustomPanel, (prev, next) => {
+    // only re-render if these props change
+    return prev.panelIndex === next.panelIndex &&
+           prev.id === next.id &&
+           prev.currentPath === next.currentPath &&
+           prev.panelPath === next.panelPath &&
+           prev.previousPath === next.previousPath &&
+           JSON.stringify(prev.extras) === JSON.stringify(next.extras) &&
+           
+           prev.panelIndex !== next.activePanel &&
+           prev.panelingType === next.panelingType
+});
+
+function CustomPanel ({
     currentPath,
     extras,
     id,
@@ -62,7 +86,7 @@ export default function CustomPanel ({
             panelPath,
             previousPath,
             panelIndex,
-            minimized: false,
+            minimized: extras?.mnmd === '1' ? true : false,
             title: ''
         })
         // Cleanup when panel unmounts

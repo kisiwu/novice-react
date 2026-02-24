@@ -2,7 +2,7 @@
 "use client";
 
 import type { ILoaderData } from '@novice1-react/react-router-paneling';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router';
 import { usePanelIndex } from '~/hooks/usePanelIndex';
 import { usePanelingStore } from '~/hooks/usePanelingStore';
@@ -12,6 +12,8 @@ export default function PanelChild() {
     const { extrasSeparator } = useLoaderData<ILoaderData>()
     const panelIndex = usePanelIndex()
     const context = usePanelingStore((state) => state.panels[panelIndex]?.context)
+
+    const [title, setTitle] = useState('')
 
     if (!context) {
         return (
@@ -23,12 +25,16 @@ export default function PanelChild() {
     }
 
     useEffect(() => {
+        if(title) {
+            usePanelingStore.getState().setPanelTitle(panelIndex, title)
+            return
+        }
         // set the initial title of the panel based on the extras if it exists and if the title is not already set 
         // (to avoid overwriting an existing title on re-render)
         if (context.extras?.title && !context.title) {
             usePanelingStore.getState().setPanelTitle(panelIndex, context.extras.title)
         }
-    }, [panelIndex, context])
+    }, [panelIndex, context, title])
 
     return (
         <div className="extra-content">
@@ -52,7 +58,8 @@ export default function PanelChild() {
                     const formData = new FormData(e.currentTarget)
                     const title = formData.get('title')
                     if (title) {
-                        usePanelingStore.getState().setPanelTitle(panelIndex, title.toString())
+                        setTitle(title.toString())
+                        //usePanelingStore.getState().setPanelTitle(panelIndex, title.toString())
                     }
                 }}
             >
