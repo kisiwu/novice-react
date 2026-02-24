@@ -194,6 +194,12 @@ export default [
 
 ### 2. Create the client loader
 
+> **Important:** Define the panel configuration object **at module scope** (outside `clientLoader`).
+> In Framework Mode, `clientLoader` runs on **every navigation**. If you call `createCustomPanel` inside `clientLoader`, 
+> it creates new component references each time, causing React to **unmount and remount** all panels on every navigation, 
+> losing any local state (e.g., form inputs, titles) in those panels. By defining the configuration at module scope, 
+> component references are created once and remain stable across navigations.
+
 ```tsx
 // routes/paneling.tsx
 
@@ -210,6 +216,41 @@ import ErrorContent from "~/components/contents/ErrorContent";
 import InfoContent from "~/components/contents/InfoContent";
 import ExtraContent from "~/components/contents/ExtraContent";
 
+// Define panel configuration at module scope to keep component references stable
+const panelingConfig = {
+    // repeat the route path here (with or without '*')
+    path: 'paneling', 
+
+    // component displayed when no panels are active
+    indexComponent: IndexPage,
+    
+    // component displayed for unknown panel names
+    errorComponent: createCustomPanel(
+        ErrorContent,
+        CustomPanel
+    ),
+    
+    // maximum number of panels in the stack
+    max: 8,
+
+    // character used to separate the panel name, id and extras within a URL segment (default ':')
+    extrasSeparator: ':',
+
+    // registered panels
+    panels: {
+        // simple panel at /paneling/info
+        info: createCustomPanel(
+          InfoContent,
+          CustomPanel
+        ),
+        // panel with ID support at /paneling/extra:<id>
+        'extra:': createCustomPanel(
+          ExtraContent,
+          CustomPanel
+        )
+    }
+};
+
 export function meta({ }: Route.MetaArgs) {
     return [
         { title: "Paneling" },
@@ -218,40 +259,7 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export async function clientLoader(args: Route.ClientLoaderArgs) {
-    const clientData = await createClientLoader({
-        // repeat the route path here (with or without '*')
-        path: 'paneling', 
-
-        // component displayed when no panels are active
-        indexComponent: IndexPage,
-        
-        // component displayed for unknown panel names
-        errorComponent: createCustomPanel(
-            ErrorContent,
-            CustomPanel
-        ),
-        
-        // maximum number of panels in the stack
-        max: 8,
-
-        // character used to separate the panel name, id and extras within a URL segment (default ':')
-        extrasSeparator: ':',
-
-
-        // registered panels
-        panels: {
-            // simple panel at /paneling/info
-            info: createCustomPanel(
-              InfoContent,
-              CustomPanel
-            ),
-            // panel with ID support at /paneling/extra:<id>
-            'extra:': createCustomPanel(
-              ExtraContent,
-              CustomPanel
-            )
-        }
-    })(args)
+    const clientData = await createClientLoader(panelingConfig)(args)
 
     if (clientData instanceof Response) return clientData
     

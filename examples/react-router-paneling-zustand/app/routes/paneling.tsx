@@ -18,20 +18,7 @@ import { PanelManagerContext } from '~/hooks/usePanelManager';
 import clsx from 'clsx';
 import SpecialContent from '~/components/contents/SpecialContent';
 
-export function meta({ }: Route.MetaArgs) {
-    return [
-        { title: 'Paneling' },
-        { name: 'description', content: 'Welcome to React Router Paneling!' },
-    ];
-}
-
-export async function loader({ params }: Route.LoaderArgs) {
-    return {};
-}
-
-export async function clientLoader(args: Route.ClientLoaderArgs) {
-    const serverData = (await args.serverLoader()) || {};
-    const clientData = await createClientLoader({
+const panelingConfig = {
         path: 'paneling',
         errorComponent: createCustomPanel(
             ErrorContent,
@@ -62,7 +49,22 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
               CustomPanel
             )
         }
-    })(args)
+    }
+
+export function meta({ }: Route.MetaArgs) {
+    return [
+        { title: 'Paneling' },
+        { name: 'description', content: 'Welcome to React Router Paneling!' },
+    ];
+}
+
+export async function loader({ params }: Route.LoaderArgs) {
+    return {};
+}
+
+export async function clientLoader(args: Route.ClientLoaderArgs) {
+    const serverData = (await args.serverLoader()) || {};
+    const clientData = await createClientLoader(panelingConfig)(args)
 
     if (clientData instanceof Response) return clientData
     
@@ -91,7 +93,7 @@ export default function Paneling() {
         }
     }, [setActivePanelIndex, stack.length, activePanelIndex])
 
-    const extension: FunctionExtension<PanelPropsExtension> = (panelIndex) => {
+    const extension: FunctionExtension<PanelPropsExtension> = useCallback((panelIndex) => {
         return {
             panelingType: type,
             nbPanels: stack.length,
@@ -99,7 +101,7 @@ export default function Paneling() {
             activePanel: activePanelIndex,
             setActivePanel
         }
-    }
+    }, [activePanelIndex, setActivePanel, stack.length, type])
 
     useEffect(() => {
         setActivePanelIndex(stack.length ? stack.length - 1 : 0)
