@@ -518,5 +518,36 @@ export default function Paneling() {
 }
 ```
 
+### 5. Programmatic navigation with `usePanelNav`
+
+The `usePanelNav` hook provides programmatic navigation between panels. It returns:
+
+- **`createPanelPath(segments)`** - builds a panel path string from an array of segments.
+- **`navigate(segments, navigateTo?)`** - navigates to the generated panel path. Optionally accepts a custom navigation function.
+- **`basePath`** - the base URL prefix for the panels.
+
+**Example:**
+
+```tsx
+import { usePanelNav } from "@novice1-react/react-router-paneling";
+
+function MyComponent() {
+  const { navigate, createPanelPath, basePath } = usePanelNav();
+
+  function openUser() {
+    // Navigates to <basePath>/user:abc123:role=admin/settings
+    navigate([
+      { panel: 'user', id: 'abc123', extras: { role: 'admin' } },
+      { panel: 'settings' }
+    ]);
+  }
+
+  // You can also just build the path without navigating
+  const path = createPanelPath([{ panel: 'info' }]); // "info"
+
+  return <button onClick={openUser}>Open user panel</button>;
+}
+```
+
 More Framework Mode examples:
 - [Framework example](https://github.com/kisiwu/novice-react/tree/main/examples/react-router-paneling-framework)

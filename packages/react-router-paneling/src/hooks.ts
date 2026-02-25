@@ -79,12 +79,12 @@ export function usePanelNav() {
          * @param segments Array of panel segments to generate the path.
          * @param navigateTo Optional custom navigation function. If not provided, the default `navigate` function from `react-router` is used.
          */
-        navigate(segments: IPanelSegment[], navigateTo?: (to: string) => void) {
+        async navigate(segments: IPanelSegment[], navigateTo?: (to: string) => void | Promise<void>) {
             const path = `${prefix}/${createPanelPath(segments, extrasSeparator)}`;
             if (navigateTo) {
-                navigateTo(path);
+                await navigateTo(path);
             } else {
-                navigate(path);
+                await navigate(path);
             }
         },
         /**
