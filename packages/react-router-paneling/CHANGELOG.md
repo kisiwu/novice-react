@@ -5,6 +5,7 @@
 ### Features
 
 - **usePanelNav**: Added `usePanelNav` hook for programmatic navigation between panels, providing a `navigate` function that accepts a target path and options for navigation behavior (e.g., replace, state).
+- **README updates**: Updated README note on Framework Mode: Define the panel configuration object **at module scope** (outside `clientLoader`) to ensure it is shared across all instances of the loader, allowing for consistent panel definitions and behavior across the application.
 
 ## 1.0.0 (2026-02-22)
 

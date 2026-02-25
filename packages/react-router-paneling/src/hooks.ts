@@ -53,8 +53,10 @@ function createPanelPath(segments: IPanelSegment[], extrasSeparator: string): st
 }
 
 /**
- * Hook to create panel paths and navigate to them.
- * @returns 
+ * Hook to create panel paths and navigate to them. 
+ * It provides a `navigate` function that allows programmatic navigation between panels.
+ * A `createPanelPath` function is also provided to generate panel paths based on segments.
+ * @returns An object containing `createPanelPath`, `navigate`, and `basePath` for panel navigation.
  */
 export function usePanelNav() {
     const { extrasSeparator, splat } = useLoaderData<ILoaderData>();
@@ -64,9 +66,19 @@ export function usePanelNav() {
     const prefix = getBaseUrl(splat, pathname)
 
     return {
+        /**
+         * Creates a panel path based on the provided segments.
+         * @param segments Array of panel segments to generate the path.
+         * @returns The generated panel path as a string.
+         */
         createPanelPath(segments: IPanelSegment[]): string {
             return createPanelPath(segments, extrasSeparator);
         },
+        /**
+         * Navigates to a panel path based on the provided segments.
+         * @param segments Array of panel segments to generate the path.
+         * @param navigateTo Optional custom navigation function. If not provided, the default `navigate` function from `react-router` is used.
+         */
         navigate(segments: IPanelSegment[], navigateTo?: (to: string) => void) {
             const path = `${prefix}/${createPanelPath(segments, extrasSeparator)}`;
             if (navigateTo) {
@@ -75,6 +87,9 @@ export function usePanelNav() {
                 navigate(path);
             }
         },
+        /**
+         * The base path for the panels.
+         */
         get basePath() {
             return prefix
         }
