@@ -1,6 +1,6 @@
 {
   "name": "@novice1-react/react-router-paneling",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A library for that turns each segment of a URL path into a panel. Stack multiple panels by simply navigating to deeper paths, each segment mapping to a panel component.",
   "type": "module",
   "main": "lib/index.cjs.js",

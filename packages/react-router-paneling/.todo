@@ -9,7 +9,7 @@
     - rename separator to extrasSeparator @done
     - publish @done
 
-v1.1.0
-    - usePanelNav @todo
-        - create usePanelNav hook that provides a navigate function for programmatic navigation between panels @todo
-        - navigate function should accept a target path and options for navigation behavior (e.g., replace, state) @todo
+- v1.1.0 @done
+    - usePanelNav @done
+        - create usePanelNav hook that provides a navigate function for programmatic navigation between panels @done
+        - navigate function should accept a target path and options for navigation behavior (e.g., replace, state) @done
